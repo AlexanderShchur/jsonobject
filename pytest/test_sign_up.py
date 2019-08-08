@@ -5,7 +5,7 @@ import json
 import random
 import logging
 
-from constants import BASE_URL, SUCCESSFULLY_CREATED, UNPROCESSABLE_ENTITY, USER_ALREADY_EXIST_ERROR, BAD_REQUEST
+from pytest.constants import BASE_URL, SUCCESSFULLY_CREATED
 
 logging.basicConfig(filename='test_app.log', filemode='w', level=logging.INFO, format='%(asctime)s - %(name)s - %('
                                                                                       'levelname)s - %(message)s')

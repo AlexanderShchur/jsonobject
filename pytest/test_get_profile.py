@@ -1,7 +1,7 @@
 import pytest
 import requests
 import json
-from constants import *
+from pytest.constants import *
 
 
 @pytest.fixture(scope='function')

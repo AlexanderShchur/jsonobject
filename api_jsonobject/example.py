@@ -42,7 +42,7 @@ def sign_up(data):
         return None
 
 
-user_to_register = RegisterRequestModel(email='test2374567t48y76745@example.com', password='qwerty11',
+user_to_register = RegisterRequestModel(email='ty76745@example.com', password='qwerty11',
                                         repeat_password='qwerty11')
 result = sign_up(user_to_register)
 assert result == user_to_register

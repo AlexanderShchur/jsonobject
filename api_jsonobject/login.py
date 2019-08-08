@@ -33,10 +33,10 @@ class BasicErrorResponse(JsonObject):
 
 
 class ErrorResponse(JsonObject):
-    error = ObjectProperty(BasicErrorResponse)
+    error_response = ObjectProperty(BasicErrorResponse)
 
     def __eq__(self, other):
-        return self.error.errors == other.errors
+        return self.error_response.errors == other.errors, self.error_response.code == other.code, self.error_response.general_error == other.general_error
 
 
 class UserWithSessionResponse(JsonObject):
@@ -55,6 +55,6 @@ def login(data):
         return ErrorResponse(r.json())
 
 
-user_to_login = SignInBody(email='email@example.com', password='qwerty1')
+user_to_login = SignInBody(email='1email@example.com', password='qwerty1j')
 result = login(user_to_login)
 print(result)

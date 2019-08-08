@@ -4,7 +4,7 @@ import requests
 import json
 import random
 
-from constants import BASE_URL, SUCCESSFULLY_CREATED, UNPROCESSABLE_ENTITY, USER_ALREADY_EXIST_ERROR, BAD_REQUEST
+from pytest.constants import BASE_URL, SUCCESSFULLY_CREATED, UNPROCESSABLE_ENTITY, USER_ALREADY_EXIST_ERROR, BAD_REQUEST
 
 positive_test_data = [
     {
