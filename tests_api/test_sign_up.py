@@ -1,14 +1,10 @@
-import pytest
-import time
-import requests
-import json
 import random
-import logging
+import time
+import pytest
+import requests
 
-from pytest.constants import BASE_URL, SUCCESSFULLY_CREATED
-
-logging.basicConfig(filename='test_app.log', filemode='w', level=logging.INFO, format='%(asctime)s - %(name)s - %('
-                                                                                      'levelname)s - %(message)s')
+from api_jsonobject.sign_up import *
+from constants import BASE_URL, SUCCESSFULLY_CREATED
 
 positive_test_data = [
     {
@@ -61,13 +57,11 @@ negative_test_data = [
 
 @pytest.fixture(params=positive_test_data)
 def positive_fixture(request):
-    logging.info("Return request body with valid data to the positive test")
     return request.param
 
 
 @pytest.fixture(params=negative_test_data)
 def negative_fixture(request):
-    logging.info("Return request body with invalid data to the negative test")
     return request.param
 
 
@@ -77,17 +71,20 @@ def test_sign_up_positive_scenario(positive_fixture):
         "password": positive_fixture['password'],
         "confirm_password": positive_fixture['confirm_password']
     }
+    user_to_register = SignUpBody(email=body['email'], password=body['password'], confirm_password=body['confirm_password'])
     email = positive_fixture['email']
     headers = {
         "content-type": "application/json"
     }
-    r = requests.post(url=f'{BASE_URL}/auth/register', data=json.dumps(body), headers=headers)
+    r = requests.post(url=f'{BASE_URL}/auth/register', json=user_to_register.to_json(), headers=headers)
     # check status code
-    logging.info("Check status code")
     assert SUCCESSFULLY_CREATED == r.status_code
     # check email from response
-    logging.info("Email verification")
     assert email == r.json()["user"]["email"]
+    if r.status_code == SUCCESSFULLY_CREATED:
+        print(UserWithSessionResponse(r.json()))
+    else:
+        print(BasicErrorResponse(r.json()))
 
 
 def test_sign_up_negative_scenario(negative_fixture):
@@ -96,20 +93,18 @@ def test_sign_up_negative_scenario(negative_fixture):
         "password": negative_fixture['password'],
         "confirm_password": negative_fixture["confirm_password"]
     }
+    user_to_register = SignUpBody(email=body['email'], password=body['password'], confirm_password=body['confirm_password'])
     expected_code = negative_fixture['code']
     expected_message = negative_fixture['errors']
     headers = {
         "content-type": "application/json"
     }
-    r = requests.post(url=f'{BASE_URL}/auth/register', data=json.dumps(body), headers=headers)
+    r = requests.post(url=f'{BASE_URL}/auth/register', json=user_to_register.to_json(), headers=headers)
     # check code
-    logging.info("Check status code")
     assert expected_code == r.status_code
     # check error message
-    logging.info("Check the expected error message")
     assert expected_message == r.json()['errors']
-#  Задача
-#  Расширить функциональность тестов параметризоваными фикстурами. Написать 2 варианта тестовых данных для первого теста
-#  и 4 варианта для второго. Фикстуры должны отдавать в тест данные и ожидаемый результат. Потом изменить код тестов,
-#  Так чтобы они заработали
-#
+    if r.status_code == SUCCESSFULLY_CREATED:
+        print(UserWithSessionResponse(r.json()))
+    else:
+        print(BasicErrorResponse(r.json()))

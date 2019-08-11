@@ -1,16 +1,10 @@
-import requests
 import re
 from jsonobject import *
-
-URL = 'http://52.207.242.187/auth/register'
-SUCCESS = 201
 
 
 def validate_email(user):
     if not re.match(r"[^@]+@[^@]+\.[^@]+", user):
         raise ValueError(f'Email: {user} is not a valid email!')
-
-# def validate_password(user)
 
 
 class SignUpBody(JsonObject):
@@ -20,7 +14,7 @@ class SignUpBody(JsonObject):
 
 
 class UserResponse(JsonObject):
-    id = IntegerProperty(name='id',  required=True)
+    id = IntegerProperty(name='id', required=True)
     email = StringProperty(name='email', required=True, validators=[validate_email])
     is_admin = BooleanProperty(name='is_admin', required=True)
     first_name = StringProperty(name='first_name', required=False)
@@ -36,33 +30,11 @@ class SessionResponse(JsonObject):
 
 
 class BasicErrorResponse(JsonObject):
-    general_error = StringProperty(name='general_error')
-    code = StringProperty(name='code')
-    errors = StringProperty(name='errors')
-
-
-class ErrorResponse(JsonObject):
-    error = ObjectProperty(BasicErrorResponse)
+    general_error = StringProperty
+    code = StringProperty
+    errors = StringProperty
 
 
 class UserWithSessionResponse(JsonObject):
     user = ObjectProperty(UserResponse)
     session = ObjectProperty(SessionResponse)
-
-    def __eq__(self, other):
-        return self.user.email == other.email, self.session.access_token == other.access_token
-
-
-def sign_up(data):
-    print(data.to_json())
-    r = requests.post(url=URL, headers={"content-type": "application/json"}, json=data.to_json())
-    if r.status_code == SUCCESS:
-        # r = requests.patch(url=)
-        return UserWithSessionResponse(r.json())
-    else:
-        return ErrorResponse(r.json())
-
-
-user_to_register = SignUpBody(email='te5677dfxdmx6745@example.com', password='qwerty11', confirm_password='qwerty11')
-result = sign_up(user_to_register)
-print(result)

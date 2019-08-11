@@ -1,8 +1,4 @@
 from jsonobject import *
-import requests
-
-URL = 'http://52.207.242.187/auth/login'
-SUCCESS = 200
 
 
 class SignInBody(JsonObject):
@@ -27,34 +23,11 @@ class SessionResponse(JsonObject):
 
 
 class BasicErrorResponse(JsonObject):
-    general_error = StringProperty(name='general_error')
-    code = StringProperty(name='code')
-    errors = StringProperty(name='errors')
-
-
-class ErrorResponse(JsonObject):
-    error_response = ObjectProperty(BasicErrorResponse)
-
-    def __eq__(self, other):
-        return self.error_response.errors == other.errors, self.error_response.code == other.code, self.error_response.general_error == other.general_error
+    general_error = StringProperty
+    code = StringProperty
+    errors = StringProperty
 
 
 class UserWithSessionResponse(JsonObject):
     user = ObjectProperty(UserResponse)
     session = ObjectProperty(SessionResponse)
-
-    def __eq__(self, other):
-        return self.user.email == other.email, self.session.access_token == other.access_token
-
-
-def login(data):
-    r = requests.post(url=URL, headers={"content-type": "application/json"}, json=data.to_json())
-    if r.status_code == SUCCESS:
-        return UserWithSessionResponse(r.json())
-    else:
-        return ErrorResponse(r.json())
-
-
-user_to_login = SignInBody(email='1email@example.com', password='qwerty1j')
-result = login(user_to_login)
-print(result)
